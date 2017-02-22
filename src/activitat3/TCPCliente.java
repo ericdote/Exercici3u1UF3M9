@@ -9,21 +9,30 @@ import javax.swing.JOptionPane;
 
 
 public class TCPCliente {
+    static String HOST = "localhost";
+    static int PORT = 5487;
     
-    Socket s;
-    DataOutputStream outToServer;
-    BufferedReader bf;
 
-    public TCPCliente() throws IOException {
-        this.s = new Socket("localhost", 5487);
-        outToServer = new DataOutputStream(s.getOutputStream());
-        bf = new BufferedReader(new InputStreamReader(s.getInputStream()));
-        outToServer.writeBytes("hola \n");
+    public TCPCliente(String host, int port) throws IOException{
+        Socket ss = new Socket(host, port);
+        
+        DataOutputStream outToServer = new DataOutputStream(ss.getOutputStream());
+        BufferedReader bf = new BufferedReader (new InputStreamReader(ss.getInputStream()));
+                        
+        outToServer.writeBytes("Hola  \n");        
+        
         String cadena = bf.readLine();
+        System.out.println(cadena);
         JOptionPane.showMessageDialog(null, cadena);
+        
         outToServer.close();
         bf.close();
-        s.close();
+        ss.close();
+    }
+    
+   public static void main(String[] args) throws IOException {
+        new TCPCliente(HOST, PORT);
+        
     }
     
     

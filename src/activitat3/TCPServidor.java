@@ -9,21 +9,30 @@ import java.net.Socket;
 import javax.swing.JOptionPane;
 
 public class TCPServidor {
+    static int PORT = 5487;
 
-    int port = 5487;
-    ServerSocket ss;
+    public TCPServidor(int port) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(port);
 
-    public TCPServidor() throws IOException {
-        this.ss = new ServerSocket(port);        
-        Socket accept = ss.accept();
-        DataOutputStream outToClient = new DataOutputStream(accept.getOutputStream());
-        BufferedReader bf = new BufferedReader(new InputStreamReader(accept.getInputStream()));
-        String cadena = bf.readLine();
-        System.out.println(cadena);
-        outToClient.writeBytes(cadena + "\n");
-        JOptionPane.showMessageDialog(null, cadena);
-        outToClient.close();
-        bf.close();
+        while (true) {
+            Socket ss = serverSocket.accept();
+
+            DataOutputStream outToClient = new DataOutputStream(ss.getOutputStream());
+            BufferedReader bf = new BufferedReader(new InputStreamReader(ss.getInputStream()));
+
+            String cadena = bf.readLine();
+            System.out.println(cadena);
+
+            outToClient.writeBytes(cadena + " desde el Server \n");
+            JOptionPane.showMessageDialog(null, cadena);
+
+            outToClient.close();
+            bf.close();
+
+        }
     }
 
+    public static void main(String[] args) throws IOException {
+        new TCPServidor(PORT);
+    }
 }
